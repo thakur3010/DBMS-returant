@@ -1,3 +1,24 @@
+<?php
+$reason=false;
+$reason1=false;
+session_start();
+if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
+  header("location: login.php");
+  exit;
+}
+include 'sign.php';
+$usersname=$_SESSION['username'];
+$sql1="SELECT `sno` FROM `users` WHERE `username`='$usersname'";
+$result=mysqli_query($conn,$sql1);
+mysqli_data_seek($result,0);
+$SNO=mysqli_fetch_row($result);
+$sql="SELECT serial_no FROM reservedseats where sno = $SNO[0] order by serial_no desc";
+$retval = mysqli_query($conn,$sql);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +44,8 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">OUR RESTAURANT</a>
+        <a class="navbar-brand js-scroll-trigger" href="/DBMSPROJECT/order.php">DASH BOARD</a>
+
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -32,7 +54,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/DBMSPROJECT/logout.php">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/DBMSPROJECT/logout.php">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -50,74 +73,132 @@
     </header>
     <!-- About-->
 
-    
     <div class="container my-5">
-    <label>Seat Reserved</label>
-    <div class="input-group mb-3">
+        <label>Seat Reserved</label>
+        <?php
+    $sql="SELECT serial_no FROM reservedseats where sno = $SNO[0] order by serial_no desc";
+    $retval = mysqli_query($conn,$sql);
+       
+       if(! $retval ) {
+          // die('Could not get data: ' . mysqli_error($conn));
+         $reason=true;
+
+       }
+       else{
+       while($row = mysqli_fetch_array($retval)) {
+        $sql1="SELECT seat_no,dt FROM reservedseats WHERE serial_no=$row[0]";
+        $result=mysqli_query($conn,$sql1);
+        // mysqli_data_seek($result,0);
+       while( $reserved=mysqli_fetch_assoc($result) )
+        {
+    
+    
+    echo'<div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="inputGroup-sizing-default">Seat No</span>
   </div>
   <input type="text" class="form-control" aria-label="Sizing example input"
-  placeholder="2" aria-describedby="inputGroup-sizing-default">
+  placeholder="'.$reserved['seat_no'].'" aria-describedby="inputGroup-sizing-default">
 </div>
 <div class="input-group mb-3">
   <div class="input-group-prepend">
-    <span class="input-group-text" id="inputGroup-sizing-default">Date</span>
+    <span class="input-group-text" id="inputGroup-sizing-default">Date of Reservation</span>
   </div>
-  <input type="text" class="form-control" aria-label="Sizing example input" placeholder="30/10/2020" aria-describedby="inputGroup-sizing-default">
-</div>
+  <input type="text" class="form-control" aria-label="Sizing example input" placeholder="'.$reserved['dt'].'" aria-describedby="inputGroup-sizing-default">
+</div>';
+break;
+}
+break;
+}
+}
+if($reason) 
+{
+  echo"<br>NO SEATS RESERVEVD TILL NOW<br>";
+}
+echo"<label>Recent order</label>";
+$sql="SELECT serial_no FROM orders where sno = $SNO[0] order by serial_no desc";
+$retval = mysqli_query($conn,$sql);
+   
+   if(! $retval ) {
+      die('Could not get data: ' . mysqli_error($conn));
+   }  
+   
+   while($row = mysqli_fetch_array($retval)) {
+   $sql1="SELECT c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,qty1,qty2,qty3,qty4,qty5,qty6,qty7,qty8,qty9,qty10,qty11,qty12,cost FROM orders WHERE serial_no=$row[0]";
+   $result=mysqli_query($conn,$sql1);
+   // mysqli_data_seek($result,0);
+  
+   if(!$result){
+     echo"its not functioning properly";
+   }
+   else{
+  while( $order=mysqli_fetch_assoc($result) ){
 
-    <label>Recent order</label>
+  
+  
+    
+
+
+    echo '
     <ul class="list-group">
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    Course Item 1
-    <span class="badge badge-primary badge-pill">1</span>
+    Course Item 1 '.$order['c1'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty1'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 2
-    <span class="badge badge-primary badge-pill">2</span>
+  Course Item 2  '.$order['c2'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty2'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 3
-    <span class="badge badge-primary badge-pill">1</span>
+  Course Item 3 '.$order['c3'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty3'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    Course Item 4
-    <span class="badge badge-primary badge-pill">1</span>
+    Course Item 4 '.$order['c4'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty4'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 5
-    <span class="badge badge-primary badge-pill">2</span>
+  Course Item 5 '.$order['c5'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty5'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 6
-    <span class="badge badge-primary badge-pill">1</span>
+  Course Item 6 '.$order['c6'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty6'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    Course Item 7
-    <span class="badge badge-primary badge-pill">1</span>
+    Course Item 7 '.$order['c7'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty7'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 8
-    <span class="badge badge-primary badge-pill">2</span>
+  Course Item 8 `'.$order['c8'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty8'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 9
-    <span class="badge badge-primary badge-pill">1</span>
+  Course Item 9 '.$order['c9'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty9'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    Course Item 10
-    <span class="badge badge-primary badge-pill">1</span>
+    Course Item 10 '.$order['c10'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty10'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 11
-    <span class="badge badge-primary badge-pill">2</span>
+  Course Item 11 '.$order['c11'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty11'].'</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-  Course Item 12
-    <span class="badge badge-primary badge-pill">1</span>
+  Course Item 12 '.$order['c12'].'
+    <span class="badge badge-primary badge-pill">'.$order['qty12'].'</span>
   </li>
-</ul>
+</ul>';
+echo'                                                  Total cost-<label>'.$order['cost'].'</label>';
+  break;
+}
+break;
+}}
+// else{
+//   echo"<br> NO RECENTS ORDER <br>";
+// }
+?>
     </div>
 
 

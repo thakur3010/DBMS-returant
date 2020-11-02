@@ -2,7 +2,7 @@
 
 $server="localhost";
 $username="root";
-$password="your my sql password";
+$password="";
 $database="kartikey";
 $conn = mysqli_connect($server,$username,$password,$database);
 if(!$conn){

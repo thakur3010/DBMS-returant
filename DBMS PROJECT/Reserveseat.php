@@ -1,8 +1,31 @@
 <?php
 session_start();
+// echo"asas".$_SESSION['username'];
 if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
     header("location: login.php");
     exit;
+}
+// echo"asasas";
+
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+
+    include 'sign.php';
+    $fname=$_POST["fname"];
+    $lname=$_POST["lname"];
+    $tnum=$_POST["tnum"];
+    $sitting=$_POST["sitting"];
+    $dt=$_POST["dt"];
+    $usersname=$_SESSION['username'];
+    $sql1="SELECT `sno` FROM `users` WHERE `username`='$usersname'";
+    $result=mysqli_query($conn,$sql1);
+    mysqli_data_seek($result,0);
+    $SNO=mysqli_fetch_row($result);
+   
+ 
+    $num=rand(1,45);
+    $sql="INSERT INTO `reservedseats`(`fname`,`lname`,`tnum`,`sitting`,`seat_no`,`dt`,`sno`) VALUES('$fname','$lname','$tnum','$sitting','$num','$dt','$SNO[0]')";
+    $result=mysqli_query($conn,$sql);
+    
 }
 ?>
 <!DOCTYPE html>
@@ -90,18 +113,18 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
         </div>
     </section> -->
     <div class="container my-5" id="about">
-        <form class="needs-validation" novalidate>
+        <form class="needs-validation" method="post" action="/DBMSPROJECT/Reserveseat.php" >
             <div class="form-row">
                 <div class="col-md-6 mb-3">
                     <label for="validationTooltip01">First name</label>
-                    <input type="text" class="form-control" id="validationTooltip01" value="First Name" required>
+                    <input type="text" class="form-control" id="fname" name="fname" value="First Name" required>
                     <div class="valid-tooltip">
                         Looks good!
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="validationTooltip02">Last name</label>
-                    <input type="text" class="form-control" id="validationTooltip02" value="surname" required>
+                    <input type="text" class="form-control" id="lname" name="lname" value="surname" required>
                     <div class="valid-tooltip">
                         Looks good!
                     </div>
@@ -111,19 +134,19 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
                 <div class="form-group row">
                     <label for="example-tel-input" class="col-2 col-form-label mx-1">Telephone</label>
                     <div class="col-10 mx-1">
-                        <input class="form-control" type="tel" value="+91 Your Number" id="example-tel-input">
+                        <input class="form-control" type="tel" value="+91 Your Number" id="tnum" name="tnum">
                     </div>
                     <div class="form-group row">
                         <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Seats</label>
                         <div class="mx-5 my-2">
-                            <input class="form-control" type="number" value="2" id="example-number-input">
+                            <input class="form-control" type="number" value="2" id="sitting" name="sitting">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="example-datetime-local-input" class="col-2 col-form-label my-2">Time</label>
                         <div class="col-10 md-8 mb-3 my-2">
                             <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00"
-                                id="example-datetime-local-input">
+                                id="dt" name="dt">
                         </div>
                     </div>
                 </div>

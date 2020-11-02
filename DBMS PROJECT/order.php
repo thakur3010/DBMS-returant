@@ -4,6 +4,53 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
     header("location: login.php");
     exit;
 }
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+
+    include 'sign.php';
+    $c1=$_POST["c1"];
+    $c2=$_POST["c2"];
+    $c3=$_POST["c3"];
+    $c4=$_POST["c4"];
+    $c5=$_POST["c5"];
+    $c6=$_POST["c6"];
+    $c7=$_POST["c7"];
+    $c8=$_POST["c8"];
+    $c9=$_POST["c9"];
+    $c10=$_POST["c10"];
+    $c11=$_POST["c11"];
+    $c12=$_POST["c12"];
+
+    $qty1=$_POST["qty1"];
+    $qty2=$_POST["qty2"];
+    $qty3=$_POST["qty3"];
+    $qty4=$_POST["qty4"];
+    $qty5=$_POST["qty5"];
+    $qty6=$_POST["qty6"];
+    $qty7=$_POST["qty7"];
+    $qty8=$_POST["qty8"];
+    $qty9=$_POST["qty9"];
+    $qty10=$_POST["qty10"];
+    $qty11=$_POST["qty11"];
+    $qty12=$_POST["qty12"];
+
+    $dt=date("Y-m-d h:i:s");
+    $usersname=$_SESSION['username'];
+    $sql1="SELECT `sno` FROM `users` WHERE `username`='$usersname'";
+    $result=mysqli_query($conn,$sql1);
+    mysqli_data_seek($result,0);
+    $SNO=mysqli_fetch_row($result);
+   
+    $qty=$qty1+$qty2+$qty3+$qty4+$qty5+$qty6+$qty7+$qty8+$qty9+$qty10+$qty11+$qty12;
+    $cost=rand(1000,10000);
+    $sql="INSERT INTO `orders`(`c1`,`c2`,`c3`,`c4`,`c5`,`c6`,`c7`,`c8`,`c9`,`c10`,`c11`,`c12`,`qty1`,`qty2`,`qty3`,`qty4`,`qty5`,`qty6`,`qty7`,`qty8`,`qty9`,`qty10`,`qty11`,`qty12`,`qty`,`cost`,`dt`,`sno`) VALUES('$c1','$c2','$c3','$c4','$c5','$c6','$c7','$c8','$c9','$c10','$c11','$c12','$qty1','$qty2','$qty3','$qty4','$qty5','$qty6','$qty7','$qty8','$qty9','$qty10','$qty11','$qty12','$qty','$cost','$dt','$SNO[0]')";
+    $result=mysqli_query($conn,$sql);  
+    if($result){
+        // echo"successfull";
+    }
+    else{
+        echo"bekkar";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,138 +141,139 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
 
 
     <div class="container my-5" id="about">
-        <form>
+        <form class="needs-validation" method="post" action="/DBMSPROJECT/order.php">
             <div class="form-group">
                 <label for="formGroupExampleInput">Course One - Hors d'oeuvres</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Item">
+                <input type="text" class="form-control" id="c1" name="c1" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty1" name="qty1">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Two - Amuse-bouche</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+
+                <input type="text" class="form-control" id="c2" name="c2" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty2" name="qty2">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Three - Soup</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c3" name="c3" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty3" name="qty3">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Four – Appetizer</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c4" name="c4" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty4" name="qty4">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Five - Salad</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c5" name="c5" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty5" name="qty5">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Six – Fish</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c6" name="c6" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty6" name="qty6">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Seven – First main course</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c7" name="c7" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty7" name="qty7">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Eight – Palate Cleanser</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c8" name="c8" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty8" name="qty8">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Nine - Second main course</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c9" name="c9" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty9" name="qty9">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Ten - Cheese course</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c10" name="c10" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty10" name="qty10">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Eleven - Dessert</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder=" Item">
+                <input type="text" class="form-control" id="c11" name="c11" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty11" name="qty11">
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="formGroupExampleInput2">Course Twelve – Mignardise.</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Item">
+                <input type="text" class="form-control" id="c12" name="c12" placeholder="Item">
                 <div class="form-group row">
                     <label for="example-number-input" class="col-2 col-form-label mx-3 my-2">Quantity</label>
                     <div class="mx-5 my-2">
-                        <input class="form-control" type="number" value="0" id="example-number-input">
+                        <input class="form-control" type="number" value="0" id="qty12" name="qty12">
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary  my-2" type="submit">Submit</button>
+            <button class="btn btn-primary  my-2" type="submit">Order</button>
         </form>
 
     </div>

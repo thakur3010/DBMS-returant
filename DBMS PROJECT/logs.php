@@ -1,3 +1,23 @@
+<?php
+$reason=false;
+$reason1=false;
+session_start();
+if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
+  header("location: login.php");
+  exit;
+}
+include 'sign.php';
+$usersname=$_SESSION['username'];
+$sql1="SELECT `sno` FROM `users` WHERE `username`='$usersname'";
+$result=mysqli_query($conn,$sql1);
+mysqli_data_seek($result,0);
+$SNO=mysqli_fetch_row($result);
+$sql="SELECT serial_no FROM reservedseats where sno = $SNO[0] order by serial_no desc";
+$retval = mysqli_query($conn,$sql);
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +44,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">OUR RESTAURANT</a>
+            <a class="navbar-brand js-scroll-trigger" href="/DBMSPROJECT/order.php">DASH BOARD</a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -60,33 +80,42 @@
       <th scope="col">S.No</th>
       <th scope="col">Date</th>
       <th scope="col">Seat No</th>
-      <th scope="col">Seating</th>
+      <th scope="col">Sitting</th>
     </tr>
   </thead>
+     
   <tbody>
+    <?php
+      $index=1;
+    while($sno=mysqli_fetch_array($retval)){
+    $sql1="SELECT dt,seat_no,sitting from reservedseats where serial_no=$sno[0]";
+    $result=mysqli_query($conn,$sql1);
+    if(!$result){
+      echo"NO LOGS TILL NOW";
+    }
+    else{
+      while($row=mysqli_fetch_assoc($result)){
+      
+    echo'
+
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <th scope="row">'.$index.'</th>
+      <td>'.$row['dt'].'</td>
+      <td>'.$row['seat_no'].'</td>
+      <td>'.$row['sitting'].'</td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
+';
+$index=$index+1;
+}
+    }
+  }
+?>
   </tbody>
 </table>
 <label>Order Logs</label>
     <table class="table table-hover table-dark">
   <thead>
-    <tr>
+  <tr>
       <th scope="col">S.No</th>
       <th scope="col">Date</th>
       <th scope="col">Food Items</th>
@@ -95,23 +124,38 @@
     </tr>
   </thead>
   <tbody>
+  <?php
+   $index=1;
+ 
+   $sql="SELECT serial_no FROM orders where sno = $SNO[0] order by serial_no desc";
+   $retval = mysqli_query($conn,$sql);
+   while($sno1=mysqli_fetch_array($retval)){
+
+
+   $sql2="SELECT dt,qty,cost from orders where serial_no=$sno1[0]";
+   $result1=mysqli_query($conn,$sql2);
+
+
+   if(!$result1){
+     echo"NO LOGS TILL NOW";
+   }
+   else{ 
+
+
+     while($row1=mysqli_fetch_assoc($result1)){
+  
+    echo'
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
+      <th scope="row">'.$index.'</th>
+      <td>'.$row1['dt'].'</td>
+      <td>'.$row1['qty'].'</td>
+      <td>'.$row1['cost'].'</td>
+    </tr>';
+   $index=$index+1;
+  }
+      }
+    }
+    ?>
   </tbody>
 </table>
 </div>
